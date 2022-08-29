@@ -26,13 +26,16 @@ const Ranks = () => {
             remains: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined;
           },
             index: number) => {
-            return (
-              <div className="r-s-w" key={rank._id}>
-                <span>{index + 1}</span>
-                <span>{rank.user}</span>
-                <span>{rank.remains}</span>
-              </div>
-            );
+            if (index < 10) {
+              return (
+                <div className="r-s-w" key={rank._id}>
+                  <span>{index + 1}</span>
+                  <span>{rank.user}</span>
+                  <span>{rank.remains}</span>
+                </div>
+              );
+            }
+            return null
           })
         ) : (
           <p style={{ color: "white", marginTop: 20 }}>
