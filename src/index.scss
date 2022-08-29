@@ -198,3 +198,14 @@ body {
   width: 100%;
   margin-bottom: 30px;
 }
+
+.ins {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  color: #FFFFFF;
+  font-size: 1.25rem;
+  background: rgba(0, 0, 0, 0.7);
+}
