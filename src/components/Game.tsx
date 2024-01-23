@@ -17,6 +17,7 @@ import {
   DEFAULT_REMAIN,
   ROWS,
 } from './constants'
+import { checkIdx } from './utils'
 
 // const COLORS: string[] = ["#1B1464", "#57606f", "#EA2027", "#FFC312"]
 /**
@@ -55,7 +56,7 @@ const Game: React.FC = () => {
       const row: number = Math.floor(Math.random() * 10)
       const col: number = Math.floor(Math.random() * 10)
       if (table[row][col] === PICKET_INIT) {
-        table[row][col] = BOOM_ACTIVE
+        table[row][col] = BOOM_INIT
         countTurn += 1
       }
     }
@@ -64,29 +65,8 @@ const Game: React.FC = () => {
 
   const [board, setBoard] = useState(() => generateBoardGame())
 
-  const handleBoom = (num: number, i: number, k: number) => {
-    const checkIdx = (num: number) => {
-      switch (num) {
-        case PICKET_INIT:
-          return FAKE_BOOM_WARNING
-
-        case PICKET_ACTIVE:
-          return PICKET_ACTIVE
-
-        case BOOM_WARNING:
-          return BOOM_DANGEROUS_ZONE
-
-        case BOOM_DANGEROUS_ZONE:
-          return BOOM_DANGEROUS_ZONE
-
-        case BOOM_INIT:
-          return BOOM_WARNING
-
-        default:
-          return FAKE_BOOM_WARNING
-      }
-    }
-
+  const handleBoom = (num: number, row: number, col: number) => {
+    if (board[row][col] === PICKET_ACTIVE) return
     setBoard((brd: number[][]) => {
       if (num === BOOM_ACTIVE) return brd
       if (
@@ -98,9 +78,7 @@ const Game: React.FC = () => {
         setOverG(true)
         return (brd = brd.map((rows: number[]) => {
           return rows.map((value: number) =>
-            value === BOOM_INIT ||
-            value === BOOM_WARNING ||
-            value === BOOM_DANGEROUS_ZONE
+            [BOOM_INIT, BOOM_WARNING, BOOM_DANGEROUS_ZONE].includes(value)
               ? BOOM_ACTIVE
               : PICKET_ACTIVE,
           )
@@ -108,32 +86,35 @@ const Game: React.FC = () => {
       }
       return produce(brd, (boardCopy: number[][]) => {
         let checker: number = 0
-        if (brd[i][k] === PICKET_INIT || brd[i][k] === FAKE_BOOM_WARNING) {
+        if ([PICKET_INIT, FAKE_BOOM_WARNING].includes(brd[row][col])) {
           checker = PICKET_ACTIVE
           setCountEnemy(prev => prev - 1)
         }
         checker = PICKET_ACTIVE
-        boardCopy[i][k] = checker
+        boardCopy[row][col] = checker
 
-        const N = i - 1 < 0 ? i + 1 : i - 1
-        const E = k + 1 > 9 ? k - 1 : k + 1
-        const S = i + 1 > 9 ? i - 1 : i + 1
-        const W = k - 1 < 0 ? k + 1 : k - 1
+        // BASED ON THE POSITION CLICKED => CREATE CROSS (+) FROM 4 DIMENSIONS (top, left, right, bottom)
+        const TOP = row - 1 < 0 ? row + 1 : row - 1 //
+        const LEFT = col - 1 < 0 ? col + 1 : col - 1
+        const BOTTOM = row + 1 > 9 ? row - 1 : row + 1
+        const RIGHT = col + 1 > 9 ? col - 1 : col + 1
+        console.log('row: => ' + row, 'col: => ' + col)
+        console.log(TOP, RIGHT, BOTTOM, LEFT)
 
         if (
-          boardCopy[N][k] === BOOM_INIT ||
-          boardCopy[N][k] === BOOM_WARNING ||
-          boardCopy[i][E] === BOOM_INIT ||
-          boardCopy[i][E] === BOOM_WARNING ||
-          boardCopy[S][k] === BOOM_INIT ||
-          boardCopy[S][k] === BOOM_WARNING ||
-          boardCopy[i][W] === BOOM_INIT ||
-          boardCopy[i][W] === BOOM_WARNING
+          boardCopy[TOP][col] === BOOM_INIT ||
+          boardCopy[TOP][col] === BOOM_WARNING ||
+          boardCopy[row][RIGHT] === BOOM_INIT ||
+          boardCopy[row][RIGHT] === BOOM_WARNING ||
+          boardCopy[BOTTOM][col] === BOOM_INIT ||
+          boardCopy[BOTTOM][col] === BOOM_WARNING ||
+          boardCopy[row][LEFT] === BOOM_INIT ||
+          boardCopy[row][LEFT] === BOOM_WARNING
         ) {
-          boardCopy[N][k] = checkIdx(brd[N][k])
-          boardCopy[i][E] = checkIdx(brd[i][E])
-          boardCopy[S][k] = checkIdx(brd[S][k])
-          boardCopy[i][W] = checkIdx(brd[i][W])
+          boardCopy[TOP][col] = checkIdx(brd[TOP][col])
+          boardCopy[row][RIGHT] = checkIdx(brd[row][RIGHT])
+          boardCopy[BOTTOM][col] = checkIdx(brd[BOTTOM][col])
+          boardCopy[row][LEFT] = checkIdx(brd[col][LEFT])
         }
       })
     })

@@ -50,7 +50,6 @@ module.exports = {
     'react/jsx-pascal-case': 'off',
     'react/jsx-handler-names': 'off',
     // 'react-hooks/exhaustive-deps': 'off',
-    'react/jsx-indent-props': [2, 2],
     'jsx-quotes': ['error', 'prefer-double'],
     'space-before-function-paren': [
       'error',
