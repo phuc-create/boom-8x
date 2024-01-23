@@ -1,54 +1,82 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
   },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended'
+    'plugin:react/recommended',
+    'prettier',
   ],
   overrides: [
     {
       env: {
-        node: true
+        node: true,
       },
-      files: [
-        '.eslintrc.{js,cjs}'
-      ],
+      files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
-        sourceType: 'script'
-      }
-    }
+        sourceType: 'script',
+      },
+    },
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
   },
   plugins: [
+    // 'plugin:prettier/recommended',
     '@typescript-eslint',
-    'react'
+    'react',
+    'prettier',
   ],
   rules: {
     'quote-props': ['error', 'as-needed'],
-    '@typescript-eslint/no-explicit-any':'warn',
-
-    indent: [
+    '@typescript-eslint/no-explicit-any': 'warn',
+    'template-curly-spacing': 'off',
+    'no-template-curly-in-string': 'off',
+    indent: 'off',
+    camelcase: 'off',
+    'no-return-assign': 'off',
+    'one-var': 'off',
+    'no-prototype-builtins': 'warn',
+    'prefer-promise-reject-errors': 'off',
+    'standard/object-curly-even-spacing': 'off',
+    'react/prop-types': 'off',
+    'react/no-unused-prop-types': 'off',
+    'react/self-closing-comp': 'off',
+    'react/jsx-boolean-value': 'off',
+    'react/jsx-pascal-case': 'off',
+    'react/jsx-handler-names': 'off',
+    // 'react-hooks/exhaustive-deps': 'off',
+    'react/jsx-indent-props': [2, 2],
+    'jsx-quotes': ['error', 'prefer-double'],
+    'space-before-function-paren': [
       'error',
-      2
+      {
+        anonymous: 'always',
+        named: 'never',
+        asyncArrow: 'always',
+      },
     ],
-    'linebreak-style': [
-      'error',
-      'windows'
+    'no-unused-vars': 'warn',
+    'no-use-before-define': 'off',
+    'prettier/prettier': [
+      'warn',
+      {
+        arrowParens: 'avoid',
+        trailingComma: 'all',
+        semi: false,
+        endOfLine: 'auto',
+        tabWidth: 2,
+        printWidth: 80,
+        useTabs: false,
+        singleQuote: true,
+        jsxSingleQuote: false,
+      },
     ],
-    quotes: [
-      'error',
-      'single'
-    ],
-    semi: [
-      'error',
-      'never'
-    ]
-  }
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+  },
 }
