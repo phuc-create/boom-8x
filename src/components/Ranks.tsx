@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getRankGame } from "../redux/rank.actions";
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getRankGame } from '../redux/rank.actions'
 
 const Ranks = () => {
-  const dispatch = useDispatch();
-  const [level, setLevel] = useState(4);
-  const { ranks } = useSelector((state: any) => state.ranks);
-  const newRank = ranks.sort((a: { remains: number; }, b: { remains: number; }) => a.remains - b.remains);
+  const dispatch = useDispatch()
+  const [level] = useState(4)
+  const { ranks } = useSelector((state: any) => state.ranks)
+  const newRank = ranks.sort((a: { remains: number; }, b: { remains: number; }) => a.remains - b.remains)
 
   useEffect(() => {
-    dispatch(getRankGame());
-  }, [dispatch, level]);
+    dispatch(getRankGame())
+  }, [dispatch, level])
   return (
     <div className="home">
       <div className="r-head">
@@ -25,7 +25,7 @@ const Ranks = () => {
             user: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined;
             remains: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined;
           },
-            index: number) => {
+          index: number) => {
             if (index < 10) {
               return (
                 <div className="r-s-w" key={rank._id}>
@@ -33,18 +33,18 @@ const Ranks = () => {
                   <span>{rank.user}</span>
                   <span>{rank.remains}</span>
                 </div>
-              );
+              )
             }
             return null
           })
         ) : (
-          <p style={{ color: "white", marginTop: 20 }}>
-            "Opp...Not any user at this rank"
+          <p style={{ color: 'white', marginTop: 20 }}>
+            Opp...Not any user at this rank
           </p>
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Ranks;
+export default Ranks

@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react'
 import produce from 'immer'
 import { styles } from '../modules'
-import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setRankGame } from "../redux/rank.actions";
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setRankGame } from '../redux/rank.actions'
 
 const ROWS = 10
 const COLUMNS = 10
@@ -17,40 +17,40 @@ const DEFAULT_REMAIN = 91
  * 3 : appear value for booma and put red color
  * @returns 
  */
-const PICKET_INIT = 0;
-const PICKET_ACTIVE = 1;
-const BOOM_INIT = 2;
-const BOOM_ACTIVE = 3;
-const BOOM_WARNING = 4;
+const PICKET_INIT = 0
+const PICKET_ACTIVE = 1
+const BOOM_INIT = 2
+const BOOM_ACTIVE = 3
+const BOOM_WARNING = 4
 const BOOM_DANGEROUS_ZONE = 8
-const FAKE_BOOM_WARNING = 5;
+const FAKE_BOOM_WARNING = 5
 const Game: React.FC = () => {
-  const [overG, setOverG] = useState<boolean>(false);
-  const [name, setName] = useState<string>("")
+  const [overG, setOverG] = useState<boolean>(false)
+  const [name, setName] = useState<string>('')
   const [saveRsl, setSaveRsl] = useState(false)
   const [countEnemy, setCountEnemy] = useState<number>(DEFAULT_REMAIN)
   const [isDone, setDone] = useState<boolean>(false)
-  const overRef = useRef(overG);
+  const overRef = useRef(overG)
   const history = useHistory()
   const dispatch = useDispatch()
 
-  overRef.current = overG;
+  overRef.current = overG
   const generateBoardGame = () => {
-    let table: any[] = []
+    const table = []
     for (let i: number = 0; i < ROWS; i++) {
       table.push([...Array(COLUMNS)].map(() => PICKET_INIT))
     }
 
-    let countTurn: number = 0;
+    let countTurn: number = 0
     while (countTurn < BOOMS) {
-      const row: number = Math.floor(Math.random() * 10);
-      const col: number = Math.floor(Math.random() * 10);
+      const row: number = Math.floor(Math.random() * 10)
+      const col: number = Math.floor(Math.random() * 10)
       if (table[row][col] === PICKET_INIT) {
-        table[row][col] = BOOM_INIT;
-        countTurn += 1;
+        table[row][col] = BOOM_INIT
+        countTurn += 1
       }
     }
-    return [...table];
+    return [...table]
   }
 
   const [board, setBoard] = useState(() => generateBoardGame())
@@ -58,23 +58,23 @@ const Game: React.FC = () => {
   const handleBoom = (num: number, i: number, k: number) => {
     const checkIdx = (num: number) => {
       switch (num) {
-        case PICKET_INIT:
-          return FAKE_BOOM_WARNING;
+      case PICKET_INIT:
+        return FAKE_BOOM_WARNING
 
-        case PICKET_ACTIVE:
-          return PICKET_ACTIVE;
+      case PICKET_ACTIVE:
+        return PICKET_ACTIVE
 
-        case BOOM_WARNING:
-          return BOOM_DANGEROUS_ZONE;
+      case BOOM_WARNING:
+        return BOOM_DANGEROUS_ZONE
 
-        case BOOM_DANGEROUS_ZONE:
-          return BOOM_DANGEROUS_ZONE;
+      case BOOM_DANGEROUS_ZONE:
+        return BOOM_DANGEROUS_ZONE
 
-        case BOOM_INIT:
-          return BOOM_WARNING;
+      case BOOM_INIT:
+        return BOOM_WARNING
 
-        default:
-          return FAKE_BOOM_WARNING
+      default:
+        return FAKE_BOOM_WARNING
       }
     }
 
@@ -97,10 +97,10 @@ const Game: React.FC = () => {
         checker = PICKET_ACTIVE
         boardCopy[i][k] = checker
 
-        let N = i - 1 < 0 ? i + 1 : i - 1
-        let E = k + 1 > 9 ? k - 1 : k + 1
-        let S = i + 1 > 9 ? i - 1 : i + 1
-        let W = k - 1 < 0 ? k + 1 : k - 1
+        const N = i - 1 < 0 ? i + 1 : i - 1
+        const E = k + 1 > 9 ? k - 1 : k + 1
+        const S = i + 1 > 9 ? i - 1 : i + 1
+        const W = k - 1 < 0 ? k + 1 : k - 1
 
         if (boardCopy[N][k] === BOOM_INIT || boardCopy[N][k] === BOOM_WARNING
           || boardCopy[i][E] === BOOM_INIT || boardCopy[i][E] === BOOM_WARNING
@@ -117,12 +117,12 @@ const Game: React.FC = () => {
   }
 
   const restartGame = () => {
-    setOverG(false);
+    setOverG(false)
     setDone(false)
     setBoard(generateBoardGame())
     setCountEnemy(DEFAULT_REMAIN)
     if (!overG) {
-      overRef.current = true;
+      overRef.current = true
     }
   }
 
@@ -133,17 +133,17 @@ const Game: React.FC = () => {
     return n === BOOM_ACTIVE ? '💣' : '🚩'
   }
   const colorRslver = (n: number): string => {
-    if (n === BOOM_ACTIVE) return "#EA2027"
-    if (n === PICKET_ACTIVE) return "#dfe6e9"
-    if (n === BOOM_DANGEROUS_ZONE) return "#ff5e57"
-    if (n === BOOM_WARNING || n === FAKE_BOOM_WARNING) return "#e67e22"
-    return "#57606f"
+    if (n === BOOM_ACTIVE) return '#EA2027'
+    if (n === PICKET_ACTIVE) return '#dfe6e9'
+    if (n === BOOM_DANGEROUS_ZONE) return '#ff5e57'
+    if (n === BOOM_WARNING || n === FAKE_BOOM_WARNING) return '#e67e22'
+    return '#57606f'
   }
 
   const handleSaveRecords = () => {
-    let user = name
-    let remains = countEnemy
-    dispatch(setRankGame(user, remains));
+    const user = name
+    const remains = countEnemy
+    dispatch(setRankGame(user, remains))
     setSaveRsl(false)
     setDone(true)
 
@@ -157,8 +157,8 @@ const Game: React.FC = () => {
           <span className="enemy-remain">REMAIN: {countEnemy - 1} </span>
         </div>
         <div className="boom" style={styles.main}>
-          {board.map((rows: [], i: number): any => {
-            return rows.map((_box: any, k: number) => {
+          {board.map((rows, i: number) => {
+            return rows.map((_box, k: number) => {
               return <div
                 key={`${i}+${k}`}
                 onClick={() => handleBoom(_box, i, k)}
@@ -168,9 +168,9 @@ const Game: React.FC = () => {
                 }}>
                 <span
                   style={{
-                    textIndent: `${board[i][k] === PICKET_INIT || board[i][k] === BOOM_INIT || board[i][k] === BOOM_WARNING || board[i][k] === FAKE_BOOM_WARNING || board[i][k] === BOOM_DANGEROUS_ZONE ? "100%" : "0%"}`,
-                    whiteSpace: "nowrap",
-                    overflow: `${board[i][k] === PICKET_INIT || board[i][k] === BOOM_INIT || board[i][k] === BOOM_WARNING || board[i][k] === FAKE_BOOM_WARNING || board[i][k] === BOOM_DANGEROUS_ZONE ? "hidden" : "unset"}`,
+                    textIndent: `${board[i][k] === PICKET_INIT || board[i][k] === BOOM_INIT || board[i][k] === BOOM_WARNING || board[i][k] === FAKE_BOOM_WARNING || board[i][k] === BOOM_DANGEROUS_ZONE ? '100%' : '0%'}`,
+                    whiteSpace: 'nowrap',
+                    overflow: `${board[i][k] === PICKET_INIT || board[i][k] === BOOM_INIT || board[i][k] === BOOM_WARNING || board[i][k] === FAKE_BOOM_WARNING || board[i][k] === BOOM_DANGEROUS_ZONE ? 'hidden' : 'unset'}`,
                   }}
                 >
                   {iconRslver(_box)}
@@ -191,7 +191,7 @@ const Game: React.FC = () => {
               TRY AGAIN
             </button>
             {isDone ? (
-              <button onClick={() => history.push("/rank")}>
+              <button onClick={() => history.push('/rank')}>
                 VIEW RANKS
               </button>
             ) : (
@@ -200,7 +200,7 @@ const Game: React.FC = () => {
               </button>
 
             )}
-            <button onClick={() => history.push("/")}>
+            <button onClick={() => history.push('/')}>
               EXIT
             </button>
           </div>
@@ -211,7 +211,7 @@ const Game: React.FC = () => {
           <span>
             <input type="text" placeholder="your name" onChange={(e) => setName(e.target.value)} />
           </span>
-          <p style={{ fontStyle: "italic", fontSize: "11px" }}>*in some cases data will not be saved for standard reasons</p>
+          <p style={{ fontStyle: 'italic', fontSize: '11px' }}>*in some cases data will not be saved for standard reasons</p>
           <div className="btn-controler">
             <button onClick={() => handleSaveRecords()}>
               SAVE
@@ -225,10 +225,10 @@ const Game: React.FC = () => {
       {
         countEnemy <= 1 && <div className="game-over" >
 
-          <p style={{ fontStyle: "oblique", fontSize: "3rem", color: "ButtonFace" }}>Congrat!!!You win this game</p>
+          <p style={{ fontStyle: 'oblique', fontSize: '3rem', color: 'ButtonFace' }}>Congrat!!!You win this game</p>
           <div className="btn-controler">
             {isDone ? (
-              <button onClick={() => history.push("/rank")}>
+              <button onClick={() => history.push('/rank')}>
                 VIEW RANKS
               </button>
             ) : (
@@ -244,7 +244,7 @@ const Game: React.FC = () => {
         </div>
       }
     </div>
-  );
-};
+  )
+}
 
-export default Game;
+export default Game

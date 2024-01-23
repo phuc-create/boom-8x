@@ -1,10 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react'
+import { Link } from 'react-router-dom'
 import { Switch, Route } from 'react-router-dom'
-import Game from "./components/Game";
-import Home from "./components/Home";
-import Instruction from "./components/Instruction";
-import Ranks from "./components/Ranks";
+import Game from './components/Game'
+import Home from './components/Home'
+import Instruction from './components/Instruction'
+import Ranks from './components/Ranks'
 
 
 const App: React.FC = () => {
@@ -21,7 +21,7 @@ const App: React.FC = () => {
         <Route exact path="/ins" component={Instruction} />
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
