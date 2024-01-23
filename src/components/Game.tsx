@@ -64,7 +64,7 @@ const Game: React.FC = () => {
   }
 
   const [board, setBoard] = useState(() => generateBoardGame())
-
+  console.table(board)
   const handleBoom = (num: number, row: number, col: number) => {
     if (board[row][col] === PICKET_ACTIVE) return
     setBoard((brd: number[][]) => {
@@ -98,18 +98,16 @@ const Game: React.FC = () => {
         const LEFT = col - 1 < 0 ? col + 1 : col - 1
         const BOTTOM = row + 1 > 9 ? row - 1 : row + 1
         const RIGHT = col + 1 > 9 ? col - 1 : col + 1
-        console.log('row: => ' + row, 'col: => ' + col)
-        console.log(TOP, RIGHT, BOTTOM, LEFT)
 
+        const checkInitOrWarn = [
+          boardCopy[TOP][col],
+          boardCopy[row][RIGHT],
+          boardCopy[BOTTOM][col],
+          boardCopy[row][LEFT],
+        ]
         if (
-          boardCopy[TOP][col] === BOOM_INIT ||
-          boardCopy[TOP][col] === BOOM_WARNING ||
-          boardCopy[row][RIGHT] === BOOM_INIT ||
-          boardCopy[row][RIGHT] === BOOM_WARNING ||
-          boardCopy[BOTTOM][col] === BOOM_INIT ||
-          boardCopy[BOTTOM][col] === BOOM_WARNING ||
-          boardCopy[row][LEFT] === BOOM_INIT ||
-          boardCopy[row][LEFT] === BOOM_WARNING
+          checkInitOrWarn.includes(BOOM_INIT) ||
+          checkInitOrWarn.includes(BOOM_WARNING)
         ) {
           boardCopy[TOP][col] = checkIdx(brd[TOP][col])
           boardCopy[row][RIGHT] = checkIdx(brd[row][RIGHT])
